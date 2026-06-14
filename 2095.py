@@ -1,5 +1,5 @@
 class Solution:
-    def deleteMiddle(self, head: Optional[ListNode]) -> Optional[ListNode]:
+    def deleteMiddle(self, head):
         if head.next == None:
             return None
         prev=None
