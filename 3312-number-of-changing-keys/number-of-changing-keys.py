@@ -1,7 +1,8 @@
 class Solution:
     def countKeyChanges(self, s: str) -> int:
+        z=s.lower()
         count=0
-        for i in range(len(s)-1):
-            if s[i].lower()!=s[i+1].lower():
+        for i in range(len(z)-1):
+            if z[i]!=z[i+1]:
                 count+=1
         return count
