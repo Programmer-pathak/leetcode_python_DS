@@ -3,5 +3,5 @@ class Solution:
         square=[]
         for i in nums:
             square.append(pow(i,2))
-        square.sort()
+            square.sort()
         return square
