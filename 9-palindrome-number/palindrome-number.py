@@ -5,19 +5,7 @@ class Solution:
 
         y=str(x)
 
-        left=0
-        right=len(y)-1
-
-        while left<right:
-            if left==right:
-                break
-            if y[left]==y[right]:
-                left+=1
-                right-=1
-            else:
-                return False
-            
-        return True
-
-        # return y==y[::-1]
-        
+        if y==y[::-1]:
+            return True
+        else:
+            return False
