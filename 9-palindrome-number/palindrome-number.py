@@ -4,3 +4,4 @@ class Solution:
             return False
         y=str(x)
         return y==y[::-1]
+        
