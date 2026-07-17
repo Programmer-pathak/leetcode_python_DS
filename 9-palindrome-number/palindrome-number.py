@@ -3,4 +3,4 @@ class Solution:
         if x<0:
             return False
         y=str(x)
-        return True if int(y[-1:-(len(y)+1):-1])==x else False
+        return True if y==y[::-1] else False
