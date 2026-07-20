@@ -11,10 +11,10 @@ class Solution:
                 right-=1
                 continue
 
-            if s[left].lower()==s[right].lower():
-                left+=1
-                right-=1
-            else:
+            if s[left].lower()!=s[right].lower():
                 return False
+                
+            left+=1
+            right-=1
             
         return True
