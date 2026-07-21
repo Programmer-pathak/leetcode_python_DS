@@ -9,9 +9,10 @@ class Solution:
             if abs(nums[left]) < abs(nums[right]):
                 arr[place]=nums[right]**2
                 right-=1
+                place-=1
             else:
                 arr[place]=nums[left]**2
                 left+=1
-            place-=1
-        
+                place-=1
+            
         return arr
