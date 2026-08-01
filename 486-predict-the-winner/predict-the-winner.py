@@ -1,19 +1,12 @@
 class Solution:
     def predictTheWinner(self, nums: List[int]) -> bool:
-        memo = {}
+        n = len(nums)
+        dp = list(nums)  # Base cases: single elements
 
-        def maxDiff(i: int, j: int) -> int:
-            if i == j:
-                return nums[i]
-            
-            if (i, j) in memo:
-                return memo[(i, j)]
-            
-            # Pick left OR pick right, subtracting opponent's optimal choice
-            pick_left = nums[i] - maxDiff(i + 1, j)
-            pick_right = nums[j] - maxDiff(i, j - 1)
-            
-            memo[(i, j)] = max(pick_left, pick_right)
-            return memo[(i, j)]
+        # Build solutions for increasing subarray lengths
+        for length in range(2, n + 1):
+            for i in range(n - length + 1):
+                j = i + length - 1
+                dp[i] = max(nums[i] - dp[i + 1], nums[j] - dp[i])
 
-        return maxDiff(0, len(nums) - 1) >= 0
+        return dp[0] >= 0
