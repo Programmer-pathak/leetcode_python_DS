@@ -19,14 +19,13 @@ class Solution:
                 if first[s[i]] < l:
                     valid = False
                     break
-                    
+
                 r = max(r, last[s[i]])
                 i += 1
                 
             if valid:
                 intervals.append((r, l))
                 
-        # Step 3: Greedily pick non-overlapping intervals (sorted by right boundary)
         intervals.sort()
         
         result = []
