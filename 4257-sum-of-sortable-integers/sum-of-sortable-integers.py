@@ -1,19 +1,19 @@
 class Solution:
     def sortableIntegers(self, nums: list[int]) -> int:
         n = len(nums)
+        
         drops = [0] * n
+        last_drop = [-1] * n
         for i in range(n - 1):
-            drops[i + 1] = drops[i] + (1 if nums[i] > nums[i + 1] else 0)
-   
-        divisors = []
-        for k in range(1, int(n**0.5) + 1):
-            if n % k == 0:
-                divisors.append(k)
-                if k * k != n:
-                    divisors.append(n // k)
-                    
+            is_drop = 1 if nums[i] > nums[i + 1] else 0
+            drops[i + 1] = drops[i] + is_drop
+            last_drop[i + 1] = i if is_drop else last_drop[i]
+            
         ans = 0
-        for k in divisors:
+        for k in range(1, n + 1):
+            if n % k != 0:
+                continue
+                
             valid = True
             prev_max = -1
             
@@ -24,19 +24,13 @@ class Solution:
                     cur_min = nums[i]
                     cur_max = nums[i + k - 1]
                 elif num_drops == 1 and nums[i + k - 1] <= nums[i]:
-                    lo, hi = i, i + k - 2
-                    while lo < hi:
-                        mid = (lo + hi) // 2
-                        if drops[mid + 1] - drops[i] == 1:
-                            hi = mid
-                        else:
-                            lo = mid + 1
-                    cur_max = nums[lo]
-                    cur_min = nums[lo + 1]
+                    drop_idx = last_drop[i + k - 1]
+                    cur_max = nums[drop_idx]
+                    cur_min = nums[drop_idx + 1]
                 else:
                     valid = False
                     break
-                
+                    
                 if cur_min < prev_max:
                     valid = False
                     break
