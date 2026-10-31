@@ -3,26 +3,17 @@ class Solution:
         MOD = 1_000_000_007
         m, n = len(grid), len(grid[0])
         
-        memo = {}
-
-        def get_destination(r: int, c: int, d: int):
-            if not (0 <= r < m and 0 <= c < n):
-                return None
-            if grid[r][c] == 0:
-                return (r, c)
-            
-            state = (r, c, d)
-            if state in memo:
-                return memo[state]
-            
-            memo[state] = None
-            if d == 0:
-                res = get_destination(r + 1, c, 1)
-            else:
-                res = get_destination(r, c + 1, 0)
-                
-            memo[state] = res
-            return res
+        to_right = [[0] * n for _ in range(m)]
+        to_down = [[0] * n for _ in range(m)]
+        
+        for r in range(m - 1, -1, -1):
+            for c in range(n - 1, -1, -1):
+                if grid[r][c] == 0:
+                    to_right[r][c] = (r, c)
+                    to_down[r][c] = (r, c)
+                else:
+                    to_right[r][c] = to_down[r + 1][c] if r + 1 < m else None
+                    to_down[r][c] = to_right[r][c + 1] if c + 1 < n else None
 
         dp = [[0] * n for _ in range(m)]
         dp[0][0] = 1
@@ -30,17 +21,19 @@ class Solution:
         for r in range(m):
             for c in range(n):
                 ways = dp[r][c]
-                if ways == 0 or grid[r][c] == 1:
+                if not ways or grid[r][c] == 1:
                     continue
                 
-                dest_right = get_destination(r, c + 1, 0)
-                if dest_right:
-                    nr, nc = dest_right
-                    dp[nr][nc] = (dp[nr][nc] + ways) % MOD
+                if c + 1 < n:
+                    dest = to_right[r][c + 1]
+                    if dest:
+                        nr, nc = dest
+                        dp[nr][nc] = (dp[nr][nc] + ways) % MOD
                 
-                dest_down = get_destination(r + 1, c, 1)
-                if dest_down:
-                    nr, nc = dest_down
-                    dp[nr][nc] = (dp[nr][nc] + ways) % MOD
+                if r + 1 < m:
+                    dest = to_down[r + 1][c]
+                    if dest:
+                        nr, nc = dest
+                        dp[nr][nc] = (dp[nr][nc] + ways) % MOD
 
         return dp[m - 1][n - 1]
