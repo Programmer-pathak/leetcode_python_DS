@@ -2,6 +2,7 @@ class Solution:
     def uniquePaths(self, grid: List[List[int]]) -> int:
         MOD = 1_000_000_007
         m, n = len(grid), len(grid[0])
+        
         memo = {}
 
         def get_destination(r: int, c: int, d: int):
@@ -36,7 +37,7 @@ class Solution:
                 if dest_right:
                     nr, nc = dest_right
                     dp[nr][nc] = (dp[nr][nc] + ways) % MOD
-        
+                
                 dest_down = get_destination(r + 1, c, 1)
                 if dest_down:
                     nr, nc = dest_down
