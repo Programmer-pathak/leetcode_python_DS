@@ -1,38 +1,45 @@
 class Solution:
     def uniquePaths(self, grid: List[List[int]]) -> int:
-        MOD = 10**9 + 7
+        MOD = 1_000_000_007
         m, n = len(grid), len(grid[0])
-        dp = [[0, 0] for _ in range(n)]
-        
-        for i in range(m):
-            new_dp = [[0, 0] for _ in range(n)]
-            if i == 0:
-                new_dp[0][0] = 1
+        memo = {}
+
+        def get_destination(r: int, c: int, d: int):
+            if not (0 <= r < m and 0 <= c < n):
+                return None
+            if grid[r][c] == 0:
+                return (r, c)
+            
+            state = (r, c, d)
+            if state in memo:
+                return memo[state]
+            
+            memo[state] = None
+            if d == 0:
+                res = get_destination(r + 1, c, 1)
+            else:
+                res = get_destination(r, c + 1, 0)
                 
-            for j in range(n):
-                if i == 0 and j == 0:
-                    ways_right = 1
-                    ways_down = 1
-                else:
-                    from_left = new_dp[j][0]
-                    from_top = dp[j][1]
-                    
-                    if grid[i][j] == 0:
-                        total = (from_left + from_top) % MOD
-                        ways_right = total
-                        ways_down = total
-                    else:
-                        ways_right = from_top
-                        ways_down = from_left
-            
-                if j + 1 < n:
-                    new_dp[j + 1][0] = ways_right
-                if i + 1 < m:
-                    new_dp[j][1] = ways_down
-             
-                if i == m - 1 and j == n - 1:
-                    return (new_dp[j][0] + dp[j][1]) % MOD
-                    
-            dp = new_dp
-            
-        return 0
+            memo[state] = res
+            return res
+
+        dp = [[0] * n for _ in range(m)]
+        dp[0][0] = 1
+
+        for r in range(m):
+            for c in range(n):
+                ways = dp[r][c]
+                if ways == 0 or grid[r][c] == 1:
+                    continue
+                
+                dest_right = get_destination(r, c + 1, 0)
+                if dest_right:
+                    nr, nc = dest_right
+                    dp[nr][nc] = (dp[nr][nc] + ways) % MOD
+        
+                dest_down = get_destination(r + 1, c, 1)
+                if dest_down:
+                    nr, nc = dest_down
+                    dp[nr][nc] = (dp[nr][nc] + ways) % MOD
+
+        return dp[m - 1][n - 1]
